@@ -29,10 +29,25 @@ class _UserBookingsScreenState extends State<UserBookingsScreen> {
     }
   }
 
+  void _refreshBookings() {
+    setState(() {
+      _bookingsFuture = Provider.of<AuthProvider>(context, listen: false).apiService.getBookings();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My Bookings')),
+      appBar: AppBar(
+        title: const Text('My Bookings'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _refreshBookings,
+            tooltip: 'Refresh Bookings',
+          ),
+        ],
+      ),
       body: FutureBuilder<List<Booking>>(
         future: _bookingsFuture,
         builder: (context, snapshot) {
