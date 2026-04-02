@@ -10,8 +10,13 @@ class ApiService {
     const prodUrl = String.fromEnvironment('BACKEND_URL');
     if (prodUrl.isNotEmpty) return '$prodUrl/api';
 
+    // PRIORITIZE LIVE BACKEND FOR TESTING
+    return 'https://benevolent-froyo-3489b0.netlify.app/api';
+
+    /* Local fallback (uncomment if needed)
     if (kIsWeb) return 'http://localhost:3001/api';
     return 'http://10.0.2.2:3001/api';
+    */
   }
   String? _token;
 
