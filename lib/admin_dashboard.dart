@@ -51,7 +51,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     
     Service? res;
     if (existingService != null) {
-      res = await auth.apiService.updateService(existingService.id, serviceData);
+     final res = await auth.apiService.updateService(existingService.id, serviceData);
     } else {
       res = await auth.apiService.createService(serviceData);
     }
@@ -59,11 +59,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     if (res != null) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(existingService != null ? 'Service Updated!' : 'Service Added!')));
-      Navigator.of(context).pop(); // Close the dialog
+      Navigator.of(context).maybePop(); // Safe pop
       _refreshData();
     } else {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Operation failed. Check server connection.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Operation failed. Session data might be unavailable.')),
+      );
     }
   }
 
@@ -80,6 +82,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     final res = await auth.apiService.updateBooking(id, {'status': status});
     if (res != null) {
       _refreshData();
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update booking. Session may have reset on server.')),
+      );
     }
   }
 
